@@ -216,6 +216,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm
   .bk-card-clickable{cursor:pointer;}
   .bk-card-clickable:hover{border-color:var(--border-s);}
   .checkin-done{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:500;}
+
+  .debug-bar{position:fixed;bottom:72px;left:0;right:0;background:rgba(29,29,27,.9);color:#c49a6c;font-size:10px;font-family:'DM Mono',monospace;padding:6px 12px;z-index:500;display:none;}
+  .debug-bar.show{display:block;}
 </style>
 </head>
 <body>
@@ -254,6 +257,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm
   <div id="booking-content"><div class="empty" style="margin-top:16px;">Tải dữ liệu trước.</div></div>
 </div>
 <!-- BOTTOM NAV -->
+
+<div class="debug-bar" id="debugBar"></div>
 <nav class="nav">
   <div class="nav-inner">
     <div class="nav-item active" id="nav-dashboard" onclick="showScreen('dashboard',this)">
@@ -313,33 +318,48 @@ function jsonp(url, cb) {
   document.head.appendChild(s);
 }
 
+
+// ── DEBUG ──
+var _t0 = 0;
+function dbg(msg) {
+  var bar = document.getElementById('debugBar');
+  if (!bar) return;
+  bar.classList.add('show');
+  var elapsed = _t0 ? ((Date.now() - _t0) / 1000).toFixed(2) + 's' : '';
+  bar.textContent = elapsed + ' · ' + msg;
+}
+
 // ── LOAD ALL ──
 function loadAll() {
+  _t0 = Date.now(); dbg("start");
   _apiUrl = document.getElementById('apiUrl').value.trim();
   if (!_apiUrl) return;
   try { localStorage.setItem('lz_url', _apiUrl); } catch(e) {}
 
   _currentWeekStart = getMondayOfWeek();
 
+  dbg('checking localStorage...');
   // Hiện data cũ từ localStorage NGAY LẬP TỨC
   try {
     var cached = localStorage.getItem('lz_cache_all');
     if (cached) {
       var c = JSON.parse(cached);
-      if (c.dashboard) { _dashData = c.dashboard; renderDashboard(c.dashboard); }
+      if (c.dashboard) { _dashData = c.dashboard; renderDashboard(c.dashboard); dbg('cache hit! rendered from localStorage'); }
       if (c.students)  { _stuData  = c.students;  renderStudents(c.students);  }
     } else {
+      dbg('no localStorage cache, fetching...');
       document.getElementById('dash-content').innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
       document.getElementById('stu-content').innerHTML  = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
     }
   } catch(e) {}
 
+  dbg('fetching Cache tab...');
   // 1 API call duy nhất — đọc từ Cache tab trong Sheet
   jsonp(_apiUrl + '?action=getCacheJsonp', function(err, json) {
     if (!err && json && json.success) {
-      if (json.dashboard) { _dashData = json.dashboard; renderDashboard(json.dashboard); }
+      if (json.dashboard) { _dashData = json.dashboard; renderDashboard(json.dashboard); dbg('API done, data rendered'); }
       if (json.students)  { _stuData  = json.students;  renderStudents(json.students);  }
-      try { localStorage.setItem('lz_cache_all', JSON.stringify(json)); } catch(e) {}
+      try { localStorage.setItem('lz_cache_all', JSON.stringify(json)); dbg('saved to localStorage'); } catch(e) {}
     } else {
       // Fallback: gọi riêng lẻ nếu cache lỗi
       jsonp(_apiUrl + '?action=getDashboardJsonp', function(e2, j2) {
