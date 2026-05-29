@@ -217,8 +217,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm
   .bk-card-clickable:hover{border-color:var(--border-s);}
   .checkin-done{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:500;}
 
-  .debug-bar{position:fixed;bottom:72px;left:0;right:0;background:rgba(29,29,27,.9);color:#c49a6c;font-size:10px;font-family:'DM Mono',monospace;padding:6px 12px;z-index:500;display:none;}
-  .debug-bar.show{display:block;}
+  .debug-bar{position:fixed;bottom:72px;left:0;right:0;background:rgba(29,29,27,.9);color:#c49a6c;font-size:10px;font-family:'DM Mono',monospace;padding:6px 12px;z-index:500;display:flex;align-items:center;justify-content:space-between;}
+  .debug-clear{font-size:10px;color:#F5F0E8;background:var(--cocoa);border:none;border-radius:4px;padding:3px 8px;cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -258,7 +258,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm
 </div>
 <!-- BOTTOM NAV -->
 
-<div class="debug-bar" id="debugBar"></div>
+<div class="debug-bar" id="debugBar"><span id="debugMsg">--</span><button class="debug-clear" onclick="clearAppCache()">Xoá cache</button></div>
 <nav class="nav">
   <div class="nav-inner">
     <div class="nav-item active" id="nav-dashboard" onclick="showScreen('dashboard',this)">
@@ -325,11 +325,23 @@ function jsonp(url, cb) {
 // ── DEBUG ──
 var _t0 = 0;
 function dbg(msg) {
-  var bar = document.getElementById('debugBar');
-  if (!bar) return;
-  bar.classList.add('show');
+  var el = document.getElementById('debugMsg');
+  if (!el) return;
   var elapsed = _t0 ? ((Date.now() - _t0) / 1000).toFixed(2) + 's' : '';
-  bar.textContent = elapsed + ' · ' + msg;
+  el.textContent = elapsed + ' · ' + msg;
+}
+
+function clearAppCache() {
+  try {
+    localStorage.removeItem('lz_cache_all');
+    localStorage.removeItem('lz_cache_dash');
+    localStorage.removeItem('lz_cache_stu');
+    _dashData = null;
+    _stuData = null;
+    _bookingCache = {};
+    dbg('cache cleared! reloading...');
+    setTimeout(function() { loadAll(); }, 300);
+  } catch(e) {}
 }
 
 // ── LOAD ALL ──
