@@ -5,349 +5,993 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lyft Zone · Coach OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --warm-black: #1D1D1B;
-    --antique-white: #F5F0E8;
-    --cocoa: #3D271A;
-    --charcoal: #4C4C4B;
-    --card: #FDFAF5;
-    --border: #E8E3DA;
-    --border-strong: #C8C3BA;
-    --success: #4a7c59;
-    --success-bg: #EAF3DE;
-    --warning: #B8895A;
-    --warning-bg: #FAEEDA;
-    --error: #9B3A2F;
-    --error-bg: #FCEBEB;
-    --text-secondary: #4C4C4B;
-    --text-tertiary: #8A8A88;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--antique-white);
-    color: var(--warm-black);
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+:root{
+  --warm-black:#1D1D1B;--antique:#F5F0E8;--cocoa:#3D271A;
+  --charcoal:#4C4C4B;--card:#FDFAF5;--border:#E8E3DA;--border-s:#C8C3BA;
+  --success:#4a7c59;--success-bg:#EAF3DE;
+  --warn:#B8895A;--warn-bg:#FAEEDA;
+  --err:#9B3A2F;--err-bg:#FCEBEB;
+  --t2:#4C4C4B;--t3:#8A8A88;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm-black);min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:72px;}
 
-  /* HEADER */
-  .header {
-    background: var(--warm-black);
-    padding: 14px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-name { font-size: 15px; font-weight: 600; color: #F5F0E8; letter-spacing: 0.04em; }
-  .header-sub  { font-size: 10px; letter-spacing: 0.14em; color: #8a8a88; text-transform: uppercase; margin-top: 1px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
-  .header-time  { font-size: 11px; color: #8a8a88; font-family: 'DM Mono', monospace; }
-  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--cocoa); color: #F5F0E8; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+/* HEADER */
+.hdr{background:var(--warm-black);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.hdr-name{font-size:15px;font-weight:600;color:#F5F0E8;letter-spacing:.04em;}
+.hdr-sub{font-size:10px;letter-spacing:.14em;color:#8a8a88;text-transform:uppercase;margin-top:1px;}
+.hdr-r{display:flex;align-items:center;gap:14px;}
+.hdr-time{font-size:11px;color:#8a8a88;font-family:'DM Mono',monospace;}
+.av{width:32px;height:32px;border-radius:50%;background:var(--cocoa);color:#F5F0E8;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;}
 
-  /* PAGE */
-  .page { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; }
+/* CONFIG */
+.cfg{background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:center;margin:16px 16px 0;}
+.cfg input{flex:1;border:.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;font-family:'DM Mono',monospace;background:var(--antique);color:var(--warm-black);outline:none;}
+.cfg input:focus{border-color:var(--cocoa);}
+.btn-p{background:var(--cocoa);color:#F5F0E8;border:none;border-radius:6px;padding:8px 16px;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;}
+.btn-p:disabled{opacity:.4;cursor:not-allowed;}
 
-  /* CONFIG BAR */
-  .config-bar {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    display: flex; gap: 10px; align-items: center;
-    margin-bottom: 24px;
-  }
-  .config-bar input {
-    flex: 1; border: 0.5px solid var(--border); border-radius: 6px;
-    padding: 8px 12px; font-size: 12px; font-family: 'DM Mono', monospace;
-    background: var(--antique-white); color: var(--warm-black); outline: none;
-  }
-  .config-bar input:focus { border-color: var(--cocoa); }
-  .btn-load {
-    background: var(--cocoa); color: #F5F0E8; border: none;
-    border-radius: 6px; padding: 8px 18px; font-size: 12px; font-weight: 500;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap;
-    transition: opacity 0.15s;
-  }
-  .btn-load:hover { opacity: 0.85; }
-  .btn-load:disabled { opacity: 0.4; cursor: not-allowed; }
+/* BOTTOM NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--warm-black);border-top:.5px solid #333;z-index:200;display:flex;justify-content:center;}
+.nav-inner{display:flex;width:100%;max-width:860px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;gap:4px;}
+.nav-icon{font-size:18px;color:#8a8a88;line-height:1;}
+.nav-label{font-size:10px;color:#8a8a88;letter-spacing:.06em;text-transform:uppercase;}
+.nav-item.active .nav-icon,.nav-item.active .nav-label{color:#c49a6c;}
 
-  /* SECTION LABEL */
-  .sec-label {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-tertiary);
-    margin-bottom: 10px; margin-top: 24px;
-  }
+/* SCREENS */
+.screen{display:none;padding:16px 16px 8px;max-width:860px;margin:0 auto;}
+.screen.active{display:block;}
 
-  /* KPI GRID */
-  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .kpi-card {
-    background: var(--card); border: 0.5px solid var(--border);
-    border-radius: 14px; padding: 20px; position: relative; overflow: hidden;
-  }
-  .kpi-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0;
-    height: 3px; background: var(--cocoa); border-radius: 14px 14px 0 0;
-  }
-  .kpi-label { font-size: 11px; color: var(--text-tertiary); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-  .kpi-number { font-size: 36px; font-weight: 300; color: var(--cocoa); line-height: 1; letter-spacing: -0.02em; }
-  .kpi-number span { font-size: 16px; color: var(--text-tertiary); font-weight: 400; }
-  .kpi-sub { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
-  .progress-track { background: var(--border); border-radius: 4px; height: 4px; margin-top: 12px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--cocoa); border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); width: 0; }
-  .kpi-pct { font-size: 11px; color: var(--text-tertiary); margin-top: 6px; font-family: 'DM Mono', monospace; }
+/* COMMON */
+.sec{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);margin:20px 0 10px;}
+.sec:first-child{margin-top:0;}
+.empty{text-align:center;padding:28px;color:var(--t3);font-size:13px;background:var(--card);border:.5px dashed var(--border);border-radius:12px;}
+.loading{display:flex;flex-direction:column;align-items:center;padding:50px;gap:12px;}
+.spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--cocoa);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{font-size:13px;color:var(--t3);}
+.error-box{background:var(--err-bg);border:.5px solid #F7C1C1;border-radius:10px;padding:14px;font-size:13px;color:var(--err);line-height:1.6;}
+.gen-at{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;text-align:right;margin-bottom:12px;}
+.footer{text-align:center;font-size:11px;color:var(--t3);margin-top:28px;font-family:'DM Mono',monospace;}
+.pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;}
+.pill-active{background:var(--success-bg);color:var(--success);}
+.pill-inactive{background:var(--err-bg);color:var(--err);}
+.pill-trial{background:#E6F1FB;color:#2A5F7F;}
+.pill-completed{background:var(--success-bg);color:var(--success);}
+.pill-upcoming,.pill-scheduled{background:var(--warn-bg);color:var(--warn);}
+.pill-cancelled,.pill-no_show{background:var(--err-bg);color:var(--err);}
+.fade-in{animation:fadeIn .3s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 
-  /* STAT ROW */
-  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .stat-card {
-    background: var(--card); border: 0.5px solid var(--border);
-    border-radius: 12px; padding: 16px; text-align: center;
-  }
-  .stat-num   { font-size: 28px; font-weight: 500; color: var(--cocoa); }
-  .stat-label { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; }
+/* DASHBOARD */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.kpi-card{background:var(--card);border:.5px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden;}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cocoa);border-radius:14px 14px 0 0;}
+.kpi-lbl{font-size:11px;color:var(--t3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.kpi-num{font-size:34px;font-weight:300;color:var(--cocoa);line-height:1;letter-spacing:-.02em;}
+.kpi-num span{font-size:15px;color:var(--t3);font-weight:400;}
+.kpi-sub{font-size:12px;color:var(--t2);margin-top:5px;}
+.prog-track{background:var(--border);border-radius:4px;height:4px;margin-top:10px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--cocoa);border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);width:0;}
+.kpi-pct{font-size:11px;color:var(--t3);margin-top:5px;font-family:'DM Mono',monospace;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.stat-card{background:var(--card);border:.5px solid var(--border);border-radius:12px;padding:14px;text-align:center;}
+.stat-num{font-size:26px;font-weight:500;color:var(--cocoa);}
+.stat-lbl{font-size:11px;color:var(--t3);margin-top:3px;}
+.bk-list{display:flex;flex-direction:column;gap:8px;}
+.bk-item{background:var(--card);border:.5px solid var(--border);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;}
+.bk-time{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--cocoa);min-width:44px;}
+.bk-div{width:.5px;height:30px;background:var(--border);flex-shrink:0;}
+.bk-info{flex:1;}
+.bk-name{font-size:14px;font-weight:500;}
+.bk-meta{font-size:12px;color:var(--t3);margin-top:2px;}
+.warn-list{display:flex;flex-direction:column;gap:8px;}
+.warn-item{background:var(--warn-bg);border:.5px solid #F0C98A;border-radius:10px;padding:11px 15px;display:flex;align-items:center;gap:10px;}
+.warn-icon{font-size:15px;flex-shrink:0;}
+.warn-txt{font-size:13px;color:#5a3a0a;line-height:1.5;flex:1;}
 
-  /* BOOKING LIST */
-  .booking-list { display: flex; flex-direction: column; gap: 8px; }
-  .booking-item {
-    background: var(--card); border: 0.5px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .booking-time { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--cocoa); min-width: 46px; }
-  .booking-divider { width: 0.5px; height: 32px; background: var(--border); flex-shrink: 0; }
-  .booking-info { flex: 1; }
-  .booking-name { font-size: 15px; font-weight: 500; }
-  .booking-meta { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
-  .status-pill { font-size: 10px; font-weight: 600; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.06em; text-transform: uppercase; }
-  .status-completed  { background: var(--success-bg); color: var(--success); }
-  .status-upcoming, .status-scheduled { background: var(--warning-bg); color: var(--warning); }
-  .status-cancelled, .status-no_show  { background: var(--error-bg);   color: var(--error);   }
+/* STUDENTS */
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px;}
+.filter-bar::-webkit-scrollbar{display:none;}
+.filter-btn{border:.5px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:500;background:var(--card);color:var(--t2);cursor:pointer;white-space:nowrap;}
+.filter-btn.active{background:var(--cocoa);color:#F5F0E8;border-color:var(--cocoa);}
+.search-wrap{position:relative;margin-bottom:12px;}
+.search-wrap input{width:100%;border:.5px solid var(--border);border-radius:8px;padding:10px 12px 10px 36px;font-size:13px;background:var(--card);color:var(--warm-black);outline:none;font-family:'DM Sans',sans-serif;}
+.search-wrap input:focus{border-color:var(--cocoa);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;}
+.stu-list{display:flex;flex-direction:column;gap:8px;}
+.stu-card{background:var(--card);border:.5px solid var(--border);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;}
+.stu-card:hover{border-color:var(--border-s);}
+.stu-av{width:44px;height:44px;border-radius:50%;background:var(--cocoa);color:#F5F0E8;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stu-info{flex:1;min-width:0;}
+.stu-name{font-size:15px;font-weight:500;}
+.stu-meta{font-size:12px;color:var(--t3);margin-top:3px;}
+.stu-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
+.stu-sess{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;color:var(--cocoa);}
+.stu-sess-lbl{font-size:10px;color:var(--t3);}
+.stu-prog-track{background:var(--border);border-radius:3px;height:3px;overflow:hidden;margin-top:8px;}
+.stu-prog-fill{height:100%;background:var(--cocoa);border-radius:3px;}
+.stu-prog-lbl{font-size:10px;color:var(--t3);margin-top:3px;}
+.renew-high{color:var(--success);}
+.renew-medium{color:var(--warn);}
+.renew-low{color:var(--err);}
 
-  /* WARNING LIST */
-  .warning-list { display: flex; flex-direction: column; gap: 8px; }
-  .warning-item {
-    background: var(--warning-bg); border: 0.5px solid #F0C98A;
-    border-radius: 10px; padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .warning-icon { font-size: 16px; flex-shrink: 0; }
-  .warning-text { font-size: 13px; color: #5a3a0a; line-height: 1.4; flex: 1; }
-  .warning-badge { font-size: 18px; font-weight: 600; color: var(--warning); font-family: 'DM Mono', monospace; }
+/* DETAIL */
+.back-btn{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--cocoa);font-weight:500;cursor:pointer;margin-bottom:16px;padding:6px 0;}
+.profile-hero{background:var(--warm-black);border-radius:14px;padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;}
+.profile-av{width:56px;height:56px;border-radius:50%;background:var(--cocoa);color:#F5F0E8;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.profile-name{font-size:18px;font-weight:600;color:#F5F0E8;}
+.profile-meta{font-size:12px;color:#8a8a88;margin-top:3px;}
+.pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.pstat{background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
+.pstat-num{font-size:22px;font-weight:500;color:var(--cocoa);}
+.pstat-lbl{font-size:10px;color:var(--t3);margin-top:2px;}
+.tab-bar{display:flex;gap:0;margin-bottom:12px;border-bottom:.5px solid var(--border);overflow-x:auto;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{font-size:12px;font-weight:500;padding:8px 12px;cursor:pointer;color:var(--t3);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+.tab-btn.active{color:var(--cocoa);border-bottom-color:var(--cocoa);}
+.dtab-panel{display:none;}
+.dtab-panel.active{display:block;}
+.detail-card{background:var(--card);border:.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:8px;}
+.detail-card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:12px;}
+.ex-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border);}
+.ex-row:last-child{border-bottom:none;padding-bottom:0;}
+.ex-ord{width:22px;height:22px;border-radius:50%;background:var(--cocoa);color:#F5F0E8;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ex-name{font-size:13px;font-weight:500;flex:1;}
+.ex-sets{font-size:12px;color:var(--t3);font-family:'DM Mono',monospace;}
+.meal-row{display:flex;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border);}
+.meal-row:last-child{border-bottom:none;padding-bottom:0;}
+.meal-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--warn-bg);color:var(--warn);white-space:nowrap;height:fit-content;flex-shrink:0;}
+.meal-food{font-size:13px;flex:1;}
+.meal-macro{font-size:11px;color:var(--t3);margin-top:2px;}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px;}
+.metric-item{text-align:center;}
+.metric-val{font-size:18px;font-weight:500;color:var(--cocoa);}
+.metric-lbl{font-size:10px;color:var(--t3);}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.photo-item{aspect-ratio:1;border-radius:8px;background:var(--border);overflow:hidden;position:relative;}
+.photo-item img{width:100%;height:100%;object-fit:cover;}
+.photo-cycle{position:absolute;bottom:4px;left:4px;font-size:9px;background:rgba(29,29,27,.75);color:#F5F0E8;padding:2px 6px;border-radius:4px;}
+.log-row{display:flex;gap:12px;padding:10px 0;border-bottom:.5px solid var(--border);}
+.log-row:last-child{border-bottom:none;padding-bottom:0;}
+.log-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);min-width:50px;}
+.log-scores{display:flex;gap:5px;flex-wrap:wrap;}
+.score-badge{font-size:10px;padding:2px 7px;border-radius:4px;background:var(--border);color:var(--t2);}
+.log-note{font-size:12px;color:var(--t2);margin-top:4px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.info-item{padding:10px 0;border-bottom:.5px solid var(--border);}
+.info-item:nth-last-child(-n+2){border-bottom:none;}
+.info-lbl{font-size:10px;color:var(--t3);margin-bottom:3px;}
+.info-val{font-size:13px;font-weight:500;}
 
-  /* EMPTY / LOADING / ERROR */
-  .empty {
-    text-align: center; padding: 28px; color: var(--text-tertiary);
-    font-size: 13px; background: var(--card);
-    border: 0.5px dashed var(--border); border-radius: 12px;
-  }
-  .loading { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 12px; }
-  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--cocoa); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-size: 13px; color: var(--text-tertiary); }
-  .error-box { background: var(--error-bg); border: 0.5px solid #F7C1C1; border-radius: 10px; padding: 16px 20px; font-size: 13px; color: var(--error); line-height: 1.6; }
+  /* BOOKING SCREEN */
+  .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .week-title{font-size:14px;font-weight:500;text-align:center;flex:1;}
+  .week-sub{font-size:11px;color:var(--t3);text-align:center;margin-top:2px;}
+  .week-btn{width:34px;height:34px;border-radius:50%;border:.5px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--cocoa);}
+  .week-btn:hover{background:var(--border);}
+  .day-block{margin-bottom:12px;}
+  .day-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .day-name{font-size:12px;font-weight:600;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;min-width:50px;}
+  .day-date{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+  .day-today .day-name,.day-today .day-date{color:var(--cocoa);}
+  .day-dot{width:6px;height:6px;border-radius:50%;background:var(--cocoa);flex-shrink:0;}
+  .bk-card{background:var(--card);border:.5px solid var(--border);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .bk-card:last-child{margin-bottom:0;}
+  .bk-card-time{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--cocoa);min-width:44px;}
+  .bk-card-div{width:.5px;height:30px;background:var(--border);flex-shrink:0;}
+  .bk-card-info{flex:1;}
+  .bk-card-name{font-size:14px;font-weight:500;}
+  .bk-card-meta{font-size:12px;color:var(--t3);margin-top:2px;}
+  .week-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+  .wsum-card{background:var(--card);border:.5px solid var(--border);border-radius:10px;padding:10px;text-align:center;}
+  .wsum-num{font-size:20px;font-weight:500;color:var(--cocoa);}
+  .wsum-lbl{font-size:10px;color:var(--t3);margin-top:2px;}
+  .no-booking-day{font-size:12px;color:var(--t3);padding:6px 0 6px 8px;font-style:italic;}
 
-  /* GENERATED AT */
-  .generated-at { font-size: 11px; color: var(--text-tertiary); font-family: 'DM Mono', monospace; text-align: right; margin-bottom: 16px; }
-
-  /* FOOTER */
-  .footer { text-align: center; font-size: 11px; color: var(--text-tertiary); margin-top: 36px; font-family: 'DM Mono', monospace; }
-
-  /* FADE */
-  .fade-in { animation: fadeIn 0.35s ease both; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  /* CHECK-IN / CHECK-OUT */
+  .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(29,29,27,.6);z-index:300;display:flex;align-items:flex-end;justify-content:center;}
+  .modal-overlay.hidden{display:none;}
+  .modal-sheet{background:var(--antique);border-radius:20px 20px 0 0;width:100%;max-width:860px;padding:20px 20px 32px;max-height:90vh;overflow-y:auto;}
+  .modal-handle{width:36px;height:4px;background:var(--border-s);border-radius:2px;margin:0 auto 16px;}
+  .modal-title{font-size:16px;font-weight:600;margin-bottom:4px;}
+  .modal-sub{font-size:12px;color:var(--t3);margin-bottom:20px;}
+  .rating-group{margin-bottom:16px;}
+  .rating-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:8px;}
+  .rating-stars{display:flex;gap:8px;}
+  .rating-star{width:44px;height:44px;border-radius:10px;border:.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .15s;}
+  .rating-star.selected{background:var(--cocoa);border-color:var(--cocoa);}
+  .rating-star.selected span{filter:brightness(10);}
+  .modal-input{width:100%;border:.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--card);color:var(--warm-black);outline:none;resize:none;margin-bottom:16px;}
+  .modal-input:focus{border-color:var(--cocoa);}
+  .completion-group{display:flex;gap:8px;margin-bottom:16px;}
+  .comp-btn{flex:1;padding:10px 4px;border-radius:8px;border:.5px solid var(--border);background:var(--card);font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all .15s;}
+  .comp-btn.selected{background:var(--cocoa);color:#F5F0E8;border-color:var(--cocoa);}
+  .btn-submit{width:100%;padding:14px;border-radius:10px;border:none;background:var(--cocoa);color:#F5F0E8;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px;}
+  .btn-submit:disabled{opacity:.4;cursor:not-allowed;}
+  .btn-cancel{width:100%;padding:12px;border-radius:10px;border:.5px solid var(--border);background:transparent;color:var(--t2);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:8px;}
+  .bk-card-clickable{cursor:pointer;}
+  .bk-card-clickable:hover{border-color:var(--border-s);}
+  .checkin-done{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--success);font-weight:500;}
 </style>
 </head>
 <body>
 
-<div class="header">
+<div class="hdr">
   <div>
-    <div class="header-name">Lyft Zone</div>
-    <div class="header-sub">Coach OS</div>
+    <div class="hdr-name">Lyft Zone</div>
+    <div class="hdr-sub">Coach OS</div>
   </div>
-  <div class="header-right">
-    <div class="header-time" id="clock">--:--</div>
-    <div class="avatar">ĐT</div>
+  <div class="hdr-r">
+    <div class="hdr-time" id="clock">--:--</div>
+    <div class="av">ĐT</div>
   </div>
 </div>
 
-<div class="page">
-  <div class="config-bar">
-    <input type="text" id="apiUrl" placeholder="Dán Web App URL vào đây...  https://script.google.com/macros/s/.../exec" />
-    <button class="btn-load" id="btnLoad" onclick="loadDashboard()">Tải Dashboard</button>
-  </div>
-  <div id="content">
-    <div class="empty">Nhập Web App URL và bấm "Tải Dashboard" để xem dữ liệu thật từ Google Sheet.</div>
-  </div>
+<div class="cfg" style="display:none;">
+  <input type="text" id="apiUrl" placeholder="Dán Web App URL..."/>
+  <button class="btn-p" id="btnLoad" onclick="loadAll()">Tải</button>
 </div>
+
+<!-- SCREENS -->
+<div class="screen active" id="screen-dashboard">
+  <div id="dash-content"><div class="empty" style="margin-top:16px;">Nhập URL và bấm Tải.</div></div>
+</div>
+
+<div class="screen" id="screen-students">
+  <div id="stu-content"><div class="empty" style="margin-top:16px;">Tải dữ liệu trước.</div></div>
+</div>
+
+<div class="screen" id="screen-detail">
+  <div id="detail-content"></div>
+</div>
+
+
+<div class="screen" id="screen-booking">
+  <div id="booking-content"><div class="empty" style="margin-top:16px;">Tải dữ liệu trước.</div></div>
+</div>
+<!-- BOTTOM NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-item active" id="nav-dashboard" onclick="showScreen('dashboard',this)">
+      <div class="nav-icon">⌂</div>
+      <div class="nav-label">Dashboard</div>
+    </div>
+    <div class="nav-item" id="nav-students" onclick="showScreen('students',this)">
+      <div class="nav-icon">◎</div>
+      <div class="nav-label">Học viên</div>
+    </div>
+    <div class="nav-item" id="nav-booking" onclick="showScreen('booking',this);loadBookingWeek()">
+      <div class="nav-icon">📅</div>
+      <div class="nav-label">Lịch</div>
+    </div>
+  </div>
+</nav>
 
 <script>
-// CLOCK
-function updateClock() {
-  var now = new Date();
-  var h = String(now.getHours()).padStart(2,'0');
-  var m = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('clock').textContent = h + ':' + m;
+// ── STATE ──
+var _dashData = null;
+var _stuData = null;
+var _stuFilter = 'all';
+var _stuSearch = '';
+var _detailTab = 'plan';
+var _apiUrl = '';
+
+// ── CLOCK ──
+function tick() {
+  var n = new Date();
+  document.getElementById('clock').textContent =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
 }
-updateClock();
-setInterval(updateClock, 10000);
+tick(); setInterval(tick, 10000);
 
-// JSONP loader
-function loadDashboard() {
-  var url = document.getElementById('apiUrl').value.trim();
-  if (!url) { alert('Vui lòng nhập Web App URL'); return; }
+// ── NAV ──
+function showScreen(name, el) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  el.classList.add('active');
+}
 
-  // lưu URL
-  try { localStorage.setItem('lz_api_url', url); } catch(e) {}
+// ── JSONP ──
+var _jsonpCount = 0;
+function jsonp(url, cb) {
+  var name = '__cb' + (++_jsonpCount) + '_' + Date.now();
+  window[name] = function(d) {
+    cb(null, d);
+    var s = document.getElementById('__js_' + name);
+    if (s) s.remove();
+    delete window[name];
+  };
+  var s = document.createElement('script');
+  s.id = '__js_' + name;
+  s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + name;
+  s.onerror = function() { cb(new Error('Không tải được')); s.remove(); };
+  document.head.appendChild(s);
+}
+
+// ── LOAD ALL ──
+function loadAll() {
+  _apiUrl = document.getElementById('apiUrl').value.trim();
+  if (!_apiUrl) { alert('Vui lòng nhập URL'); return; }
+  try { localStorage.setItem('lz_url', _apiUrl); } catch(e) {}
 
   var btn = document.getElementById('btnLoad');
-  btn.disabled = true;
-  btn.textContent = 'Đang tải...';
+  btn.disabled = true; btn.textContent = 'Đang tải...';
 
-  document.getElementById('content').innerHTML =
-    '<div class="loading"><div class="spinner"></div><div class="loading-text">Đang tải từ Google Sheet...</div></div>';
+  document.getElementById('dash-content').innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
+  document.getElementById('stu-content').innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
 
-  // Xoá callback cũ nếu có
-  if (window.__lzCb) {
-    var old = document.getElementById('__lzScript');
-    if (old) old.remove();
+  var done = 0;
+  function finish() { if (++done >= 2) { btn.disabled = false; btn.textContent = 'Tải lại'; } }
+
+  jsonp(_apiUrl + '?action=getDashboardJsonp', function(err, json) {
+    finish();
+    if (err || !json || !json.success) {
+      document.getElementById('dash-content').innerHTML = '<div class="error-box"><strong>Lỗi dashboard</strong><br>' + (err ? err.message : (json && json.error || 'Không rõ')) + '</div>';
+      return;
+    }
+    _dashData = json.data;
+    renderDashboard(json.data);
+  });
+
+  _currentWeekStart = getMondayOfWeek();
+  jsonp(_apiUrl + '?action=getStudentsJsonp', function(err, json) {
+    finish();
+    if (err || !json || !json.success) {
+      document.getElementById('stu-content').innerHTML = '<div class="error-box"><strong>Lỗi học viên</strong><br>' + (err ? err.message : (json && json.error || 'Không rõ')) + '</div>';
+      return;
+    }
+    _stuData = json.data;
+    renderStudents(json.data);
+  });
+}
+
+// ── HELPERS ──
+function fmt(n) { return Number(n || 0).toLocaleString('vi-VN'); }
+function initials(name) {
+  if (!name) return '?';
+  var p = String(name).trim().split(' ');
+  if (p.length === 1) return p[0].substring(0, 2).toUpperCase();
+  return (p[p.length-2][0] + (p[p.length-1][0] || '')).toUpperCase();
+}
+function dateStr(v) { return v ? String(v).substring(0, 10) : '-'; }
+function renewCls(v) {
+  var r = String(v || '').toLowerCase();
+  if (r === 'high') return 'renew-high';
+  if (r === 'medium') return 'renew-medium';
+  if (r === 'low') return 'renew-low';
+  return '';
+}
+
+// ── RENDER DASHBOARD ──
+function renderDashboard(d) {
+  var show = d.showKPI || d.kpi_show || {};
+  var rev = d.revenueKPI || d.kpi_revenue || {};
+  var stu = d.studentsSummary || {};
+  var bks = d.todayBookings || d.today_bookings || [];
+  var warns = d.warnings || [];
+
+  var sC = show.completed_shows || show.completed || 0;
+  var sT = show.target_shows || show.target || 0;
+  var sP = show.percentage || show.percent || (sT > 0 ? Math.round(sC/sT*100) : 0);
+  var rC = rev.current_revenue || rev.current || 0;
+  var rT = rev.target_revenue || rev.target || 0;
+  var rP = rev.percentage || rev.percent || (rT > 0 ? Math.round(rC/rT*100) : 0);
+  var total = d.total_active_students !== undefined ? d.total_active_students : (stu.active_non_trial || '-');
+  var today = new Date().toLocaleDateString('vi-VN', {weekday:'long',day:'numeric',month:'numeric'});
+
+  var bkHtml = bks.length === 0
+    ? '<div class="empty">Không có lịch hôm nay 🎉</div>'
+    : '<div class="bk-list">' + bks.map(function(b) {
+        var st = (b.status || 'upcoming').toLowerCase().replace(/\s/g,'_');
+        return '<div class="bk-item">'
+          + '<div class="bk-time">' + (b.time || b.start_time || '--') + '</div>'
+          + '<div class="bk-div"></div>'
+          + '<div class="bk-info"><div class="bk-name">' + (b.student_name||'?') + '</div>'
+          + '<div class="bk-meta">' + (b.session_type||b.type||'PT') + ' · ' + (b.duration_minutes||60) + ' phút</div></div>'
+          + '<div class="pill pill-' + st + '">' + b.status + '</div></div>';
+      }).join('') + '</div>';
+
+  // Group warnings by student
+  var warnHtml = '';
+  if (warns.length > 0) {
+    var groups = {}, order = [];
+    warns.forEach(function(w) {
+      var k = w.student_id || w.student_name;
+      if (!groups[k]) { groups[k] = {name: w.student_name, msgs: []}; order.push(k); }
+      groups[k].msgs.push(w.message || w.type || '');
+    });
+    warnHtml = '<div class="sec">Cảnh báo</div><div class="warn-list">'
+      + order.map(function(k) {
+          return '<div class="warn-item"><div class="warn-icon">⚠️</div>'
+            + '<div class="warn-txt"><strong>' + groups[k].name + '</strong><br>'
+            + groups[k].msgs.join('<br>') + '</div></div>';
+        }).join('') + '</div>';
   }
 
-  var cbName = '__lzDashboard_' + Date.now();
-  window[cbName] = function(json) {
-    btn.disabled = false;
-    btn.textContent = 'Tải lại';
-    var s = document.getElementById('__lzScript');
-    if (s) s.remove();
-    if (json && json.success) {
-      renderDashboard(json.data);
-    } else {
-      document.getElementById('content').innerHTML =
-        '<div class="error-box"><strong>API lỗi</strong><br>' + (json && json.error ? json.error : 'Không rõ lỗi') + '</div>';
-    }
-  };
-
-  var script = document.createElement('script');
-  script.id = '__lzScript';
-  var sep = url.indexOf('?') >= 0 ? '&' : '?';
-  script.src = url + sep + 'action=getDashboardJsonp&callback=' + cbName;
-  script.onerror = function() {
-    btn.disabled = false;
-    btn.textContent = 'Tải lại';
-    document.getElementById('content').innerHTML =
-      '<div class="error-box"><strong>Không tải được</strong><br>Kiểm tra URL và cài đặt deploy (Who has access: Anyone).</div>';
-  };
-  document.head.appendChild(script);
-}
-
-function fmt(n) {
-  return Number(n || 0).toLocaleString('vi-VN');
-}
-
-function renderDashboard(d) {
-  var show     = d.showKPI        || d.kpi_show    || {};
-  var rev      = d.revenueKPI     || d.kpi_revenue || {};
-  var students = d.studentsSummary || {};
-  var bookings = d.todayBookings  || d.today_bookings || [];
-  var warnings = d.warnings       || [];
-  var genAt    = d.generated_at   || '';
-
-  var showCompleted = show.completed_shows ?? show.completed ?? 0;
-  var showTarget    = show.target_shows    ?? show.target    ?? 0;
-  var showPct       = show.percentage ?? show.percent ?? (showTarget > 0 ? Math.round(showCompleted/showTarget*100) : 0);
-
-  var revCurrent = rev.current_revenue ?? rev.current ?? 0;
-  var revTarget  = rev.target_revenue  ?? rev.target  ?? 0;
-  var revPct     = rev.percentage ?? rev.percent ?? (revTarget > 0 ? Math.round(revCurrent/revTarget*100) : 0);
-
-  var totalActive = d.total_active_students ?? students.active_non_trial ?? '-';
-  var pt11  = students.pt_1_1 ?? '-';
-  var semi  = students.semi   ?? '-';
-
-  var today = new Date().toLocaleDateString('vi-VN', {weekday:'long', day:'numeric', month:'numeric'});
-
-  var bookingHtml = bookings.length === 0
-    ? '<div class="empty">Không có lịch hôm nay 🎉</div>'
-    : '<div class="booking-list">' + bookings.map(function(b) {
-        var st = (b.status || 'upcoming').toLowerCase().replace(' ','_');
-        return '<div class="booking-item">'
-          + '<div class="booking-time">' + (b.time || b.start_time || '--') + '</div>'
-          + '<div class="booking-divider"></div>'
-          + '<div class="booking-info">'
-          +   '<div class="booking-name">' + (b.student_name || b.name || '?') + '</div>'
-          +   '<div class="booking-meta">' + (b.session_type || b.type || 'PT') + ' · ' + (b.duration_minutes || b.duration_min || 60) + ' phút</div>'
-          + '</div>'
-          + '<div class="status-pill status-' + st + '">' + b.status + '</div>'
-          + '</div>';
-      }).join('') + '</div>';
-
-  var warningHtml = warnings.length === 0 ? '' :
-    '<div class="sec-label">Cảnh báo</div>'
-    + '<div class="warning-list">' + warnings.map(function(w) {
-        return '<div class="warning-item">'
-          + '<div class="warning-icon">⚠️</div>'
-          + '<div class="warning-text"><strong>' + (w.student_name || '') + '</strong><br>' + (w.message || w.type || '') + '</div>'
-          + (w.remaining_sessions !== undefined ? '<div class="warning-badge">' + w.remaining_sessions + '</div>' : '')
-          + '</div>';
-      }).join('') + '</div>';
-
-  document.getElementById('content').innerHTML = '<div class="fade-in">'
-    + (genAt ? '<div class="generated-at">Cập nhật ' + genAt + '</div>' : '')
-
-    + '<div class="sec-label">KPI tháng & doanh thu</div>'
+  document.getElementById('dash-content').innerHTML = '<div class="fade-in">'
+    + (d.generated_at ? '<div class="gen-at">Cập nhật ' + d.generated_at + '</div>' : '')
+    + '<div class="sec">KPI tháng & doanh thu</div>'
     + '<div class="kpi-grid">'
-
-    + '<div class="kpi-card">'
-    + '<div class="kpi-label">Buổi tập · ' + (show.month || '') + '</div>'
-    + '<div class="kpi-number">' + showCompleted + '<span> / ' + showTarget + '</span></div>'
+    + '<div class="kpi-card"><div class="kpi-lbl">Buổi tập · ' + (show.month||'') + '</div>'
+    + '<div class="kpi-num">' + sC + '<span> / ' + sT + '</span></div>'
     + '<div class="kpi-sub">mục tiêu tháng này</div>'
-    + '<div class="progress-track"><div class="progress-fill" id="pf1"></div></div>'
-    + '<div class="kpi-pct">' + showPct + '% hoàn thành</div>'
+    + '<div class="prog-track"><div class="prog-fill" id="pf1"></div></div>'
+    + '<div class="kpi-pct">' + sP + '% hoàn thành</div></div>'
+    + '<div class="kpi-card"><div class="kpi-lbl">Doanh thu · ' + (rev.quarter||'') + '</div>'
+    + '<div class="kpi-num">' + fmt(rC) + '<span>đ</span></div>'
+    + '<div class="kpi-sub">target ' + fmt(rT) + 'đ</div>'
+    + '<div class="prog-track"><div class="prog-fill" id="pf2"></div></div>'
+    + '<div class="kpi-pct">' + rP + '% hoàn thành</div></div>'
     + '</div>'
-
-    + '<div class="kpi-card">'
-    + '<div class="kpi-label">Doanh thu · ' + (rev.quarter || '') + '</div>'
-    + '<div class="kpi-number">' + fmt(revCurrent) + '<span>đ</span></div>'
-    + '<div class="kpi-sub">target ' + fmt(revTarget) + 'đ</div>'
-    + '<div class="progress-track"><div class="progress-fill" id="pf2"></div></div>'
-    + '<div class="kpi-pct">' + revPct + '% hoàn thành</div>'
-    + '</div>'
-
-    + '</div>'
-
-    + '<div class="sec-label">Học viên</div>'
+    + '<div class="sec">Học viên</div>'
     + '<div class="stat-row">'
-    + '<div class="stat-card"><div class="stat-num">' + totalActive + '</div><div class="stat-label">Active</div></div>'
-    + '<div class="stat-card"><div class="stat-num">' + pt11 + '</div><div class="stat-label">PT 1:1</div></div>'
-    + '<div class="stat-card"><div class="stat-num">' + semi + '</div><div class="stat-label">Semi-Coach</div></div>'
+    + '<div class="stat-card"><div class="stat-num">' + total + '</div><div class="stat-lbl">Active</div></div>'
+    + '<div class="stat-card"><div class="stat-num">' + (stu.pt_1_1||'-') + '</div><div class="stat-lbl">PT 1:1</div></div>'
+    + '<div class="stat-card"><div class="stat-num">' + (stu.semi||'-') + '</div><div class="stat-lbl">Semi</div></div>'
     + '</div>'
-
-    + '<div class="sec-label">Lịch hôm nay · ' + today + '</div>'
-    + bookingHtml
-
-    + warningHtml
-
+    + '<div class="sec">Lịch hôm nay · ' + today + '</div>' + bkHtml
+    + warnHtml
     + '<div class="footer">Lyft Zone Coach OS · v1.0 · Google Sheet</div>'
     + '</div>';
 
-  // Animate progress bars sau khi DOM render
   setTimeout(function() {
-    var pf1 = document.getElementById('pf1');
-    var pf2 = document.getElementById('pf2');
-    if (pf1) pf1.style.width = Math.min(showPct, 100) + '%';
-    if (pf2) pf2.style.width = Math.min(revPct, 100) + '%';
+    var p1 = document.getElementById('pf1'), p2 = document.getElementById('pf2');
+    if (p1) p1.style.width = Math.min(sP, 100) + '%';
+    if (p2) p2.style.width = Math.min(rP, 100) + '%';
   }, 50);
 }
 
-// Auto-load URL đã lưu
+// ── RENDER STUDENTS ──
+function renderStudents(data) {
+  var list = Array.isArray(data) ? data : (data && data.students ? data.students : []);
+
+  var filtered = list.filter(function(s) {
+    var st = String(s.status || '').toLowerCase();
+    var type = String(s.student_type || '').toLowerCase();
+    if (_stuFilter === 'active' && st !== 'active') return false;
+    if (_stuFilter === 'pt' && type !== 'pt_1_1') return false;
+    if (_stuFilter === 'semi' && type !== 'semi') return false;
+    if (_stuFilter === 'trial' && type !== 'trial') return false;
+    if (_stuSearch) {
+      var q = _stuSearch.toLowerCase();
+      if (!String(s.name||'').toLowerCase().includes(q) && !String(s.phone||'').toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  var filterHtml = '<div class="filter-bar">'
+    + ['all','active','pt','semi','trial'].map(function(f) {
+        var L = {all:'Tất cả',active:'Active',pt:'PT 1:1',semi:'Semi',trial:'Trial'};
+        return '<div class="filter-btn' + (f===_stuFilter?' active':'') + '" onclick="setFilter(\'' + f + '\')">' + L[f] + '</div>';
+      }).join('') + '</div>';
+
+  var searchHtml = '<div class="search-wrap"><div class="search-icon">🔍</div>'
+    + '<input type="text" placeholder="Tìm tên hoặc số điện thoại..." value="' + _stuSearch + '" oninput="setSearch(this.value)"></div>';
+
+  var countHtml = '<div style="font-size:12px;color:var(--t3);margin-bottom:10px;">' + filtered.length + ' / ' + list.length + ' học viên</div>';
+
+  var listHtml = filtered.length === 0
+    ? '<div class="empty">Không tìm thấy.</div>'
+    : '<div class="stu-list">' + filtered.map(function(s) {
+        var remaining = Number(s.remaining_sessions || 0);
+        var total = Number(s.total_sessions || 0);
+        var pct = total > 0 ? Math.round((total - remaining) / total * 100) : 0;
+        var isMem = String(s.student_type || '') === 'Membership';
+        var st = String(s.status || 'active').toLowerCase();
+        var rc = renewCls(s.renew_probability);
+        return '<div class="stu-card" onclick="openDetail(\'' + s.student_id + '\')">'
+          + '<div class="stu-av">' + initials(s.name) + '</div>'
+          + '<div class="stu-info">'
+          + '<div class="stu-name">' + (s.name || s.student_id) + '</div>'
+          + '<div class="stu-meta">' + (s.phone||'') + (s.goal?' · '+s.goal:'') + '</div>'
+          + '<div style="display:flex;gap:6px;margin-top:6px;align-items:center;">'
+          + '<div class="pill pill-' + st + '">' + st + '</div>'
+          + (s.student_type ? '<div style="font-size:11px;color:var(--t3);">' + String(s.student_type).replace('_',' ') + '</div>' : '')
+          + (s.renew_probability ? '<div style="font-size:11px;" class="' + rc + '">↻ ' + s.renew_probability + '</div>' : '')
+          + '</div>'
+          + (!isMem && total > 0 ? '<div class="stu-prog-track"><div class="stu-prog-fill" style="width:' + pct + '%"></div></div><div class="stu-prog-lbl">' + pct + '% hoàn thành</div>' : '')
+          + '</div>'
+          + '<div class="stu-right"><div class="stu-sess">' + (isMem ? '∞' : remaining) + '</div><div class="stu-sess-lbl">' + (isMem ? 'Membership' : 'buổi còn') + '</div></div>'
+          + '</div>';
+      }).join('') + '</div>';
+
+  document.getElementById('stu-content').innerHTML = '<div class="fade-in">' + filterHtml + searchHtml + countHtml + listHtml + '<div class="footer">Lyft Zone Coach OS · v1.0</div></div>';
+}
+
+function setFilter(f) { _stuFilter = f; if (_stuData) renderStudents(_stuData); }
+function setSearch(v) { _stuSearch = v; if (_stuData) renderStudents(_stuData); }
+
+// ── OPEN DETAIL ──
+function openDetail(studentId) {
+  if (!_apiUrl) return;
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-detail').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('nav-students').classList.add('active');
+
+  document.getElementById('detail-content').innerHTML =
+    '<div class="back-btn" onclick="goBack()">← Danh sách học viên</div>'
+    + '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải hồ sơ...</div></div>';
+
+  jsonp(_apiUrl + '?action=getStudentProfileJsonp&student_id=' + studentId, function(err, json) {
+    if (err || !json || !json.success) {
+      document.getElementById('detail-content').innerHTML =
+        '<div class="back-btn" onclick="goBack()">← Danh sách học viên</div>'
+        + '<div class="error-box">Không tải được hồ sơ.<br>' + (err ? err.message : (json && json.error || '')) + '</div>';
+      return;
+    }
+    renderDetail(json.data);
+  });
+}
+
+function goBack() {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-students').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('nav-students').classList.add('active');
+}
+
+function switchTab(t) {
+  _detailTab = t;
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  var btn = document.getElementById('dtab-' + t);
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.dtab-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.getElementById('dpanel-' + t);
+  if (panel) panel.classList.add('active');
+}
+
+// ── RENDER DETAIL ──
+function renderDetail(d) {
+  var s = d.student || {};
+  var plans = d.workoutPlans || [];
+  var meals = d.mealPlans || [];
+  var metrics = d.bodyMetrics || [];
+  var photos = d.bodyPhotos || [];
+  var logs = d.sessionLogs || [];
+
+  var remaining = Number(s.remaining_sessions || 0);
+  var total = Number(s.total_sessions || 0);
+  var completed = total - remaining;
+  var pct = total > 0 ? Math.round(completed / total * 100) : 0;
+  var st = String(s.status || 'active').toLowerCase();
+  var rc = renewCls(s.renew_probability);
+
+  // Sort
+  logs.sort(function(a,b) { return String(b.session_date||'').localeCompare(String(a.session_date||'')); });
+  metrics.sort(function(a,b) { return String(b.measured_date||'').localeCompare(String(a.measured_date||'')); });
+  photos.sort(function(a,b) { return String(b.photo_date||'').localeCompare(String(a.photo_date||'')); });
+
+  // HERO
+  var hero = '<div class="back-btn" onclick="goBack()">← Danh sách học viên</div>'
+    + '<div class="profile-hero">'
+    + '<div class="profile-av">' + initials(s.name) + '</div>'
+    + '<div style="flex:1">'
+    + '<div class="profile-name">' + (s.name || s.student_id) + '</div>'
+    + '<div class="profile-meta">' + (s.phone||'') + (s.goal?' · '+s.goal:'') + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:8px;align-items:center;">'
+    + '<div class="pill pill-' + st + '">' + st + '</div>'
+    + (s.student_type ? '<div style="font-size:11px;color:#8a8a88;">' + String(s.student_type).replace('_',' ') + '</div>' : '')
+    + (s.renew_probability ? '<div style="font-size:11px;" class="' + rc + '">↻ ' + s.renew_probability + '</div>' : '')
+    + '</div></div></div>';
+
+  var stats = '<div class="pstats">'
+    + '<div class="pstat"><div class="pstat-num">' + completed + '</div><div class="pstat-lbl">Hoàn thành</div></div>'
+    + '<div class="pstat"><div class="pstat-num">' + remaining + '</div><div class="pstat-lbl">Còn lại</div></div>'
+    + '<div class="pstat"><div class="pstat-num">' + pct + '%</div><div class="pstat-lbl">Tiến trình</div></div>'
+    + '</div>';
+
+  // TABS
+  var tabLabels = {plan:'Giáo án',meal:'Thực đơn',inbody:'InBody',photos:'Ảnh',history:'Lịch sử',info:'Thông tin'};
+  var tabBar = '<div class="tab-bar">'
+    + Object.keys(tabLabels).map(function(t) {
+        return '<div class="tab-btn' + (t===_detailTab?' active':'') + '" id="dtab-' + t + '" onclick="switchTab(\'' + t + '\')">' + tabLabels[t] + '</div>';
+      }).join('') + '</div>';
+
+  // PLAN
+  var latestWeek = plans.reduce(function(w,p) { return String(p.week_start||'')>w?String(p.week_start||''):w; }, '');
+  var latestPlans = plans.filter(function(p) { return String(p.week_start||'')===latestWeek; });
+  var byDay = {}; var dayOrder = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var dayVi = {Mon:'Thứ 2',Tue:'Thứ 3',Wed:'Thứ 4',Thu:'Thứ 5',Fri:'Thứ 6',Sat:'Thứ 7',Sun:'Chủ nhật'};
+  latestPlans.forEach(function(p) {
+    var day = p.day_of_week || 'Mon';
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(p);
+  });
+  dayOrder.forEach(function(d) { if (byDay[d]) byDay[d].sort(function(a,b) { return Number(a.order_in_day||0)-Number(b.order_in_day||0); }); });
+
+  var planContent = latestPlans.length === 0 ? '<div class="empty">Chưa có giáo án.</div>'
+    : dayOrder.filter(function(d) { return byDay[d] && byDay[d].length; }).map(function(d) {
+        return '<div class="detail-card">'
+          + '<div class="detail-card-title">' + (dayVi[d]||d) + '</div>'
+          + byDay[d].map(function(ex) {
+              return '<div class="ex-row"><div class="ex-ord">' + (ex.order_in_day||'') + '</div>'
+                + '<div class="ex-name">' + (ex.exercise_name||'') + '</div>'
+                + '<div class="ex-sets">' + (ex.sets||0) + '×' + (ex.reps||0) + (ex.weight_kg?' · '+ex.weight_kg+'kg':'') + '</div></div>';
+            }).join('') + '</div>';
+      }).join('');
+
+  // MEAL
+  var mealOrder = ['Sáng','Trưa','Chiều','Tối','Trước tập','Sau tập'];
+  var latestMealWeek = meals.reduce(function(w,m) { return String(m.week_start||'')>w?String(m.week_start||''):w; }, '');
+  var latestMeals = meals.filter(function(m) { return String(m.week_start||'')===latestMealWeek; });
+  latestMeals.sort(function(a,b) { return mealOrder.indexOf(a.meal_time)-mealOrder.indexOf(b.meal_time); });
+  var mealContent = latestMeals.length === 0 ? '<div class="empty">Chưa có thực đơn.</div>'
+    : '<div class="detail-card">' + latestMeals.map(function(m) {
+        return '<div class="meal-row"><div class="meal-badge">' + (m.meal_time||'') + '</div>'
+          + '<div><div class="meal-food">' + (m.food_items||'') + '</div>'
+          + ((m.calories_kcal||m.protein_g)?'<div class="meal-macro">'+(m.calories_kcal?m.calories_kcal+'kcal':'')+(m.protein_g?' · '+m.protein_g+'g protein':'')+'</div>':'')
+          + '</div></div>';
+      }).join('') + '</div>';
+
+  // INBODY
+  var inbodyContent = metrics.length === 0 ? '<div class="empty">Chưa có dữ liệu InBody.</div>'
+    : metrics.slice(0,5).map(function(m) {
+        return '<div class="detail-card"><div class="detail-card-title">' + dateStr(m.measured_date) + '</div>'
+          + '<div class="metric-row">'
+          + '<div class="metric-item"><div class="metric-val">' + (m.weight_kg||'-') + '</div><div class="metric-lbl">kg</div></div>'
+          + '<div class="metric-item"><div class="metric-val">' + (m.body_fat_pct||'-') + '</div><div class="metric-lbl">% mỡ</div></div>'
+          + '<div class="metric-item"><div class="metric-val">' + (m.muscle_mass_kg||'-') + '</div><div class="metric-lbl">kg cơ</div></div>'
+          + '</div>' + (m.notes?'<div style="font-size:12px;color:var(--t3);margin-top:6px;">'+m.notes+'</div>':'')
+          + '</div>';
+      }).join('');
+
+  // PHOTOS
+  var photosContent = photos.length === 0 ? '<div class="empty">Chưa có ảnh tiến trình.</div>'
+    : '<div class="photo-grid">' + photos.slice(0,9).map(function(p) {
+        var u = p.url_front || p.url_side || p.url_back || '';
+        return '<div class="photo-item">'
+          + (u?'<img src="'+u+'" onerror="this.style.display=\'none\'">':'')
+          + '<div class="photo-cycle">Chu kỳ ' + (p.cycle_number||'?') + '</div></div>';
+      }).join('') + '</div>';
+
+  // HISTORY
+  var histContent = logs.length === 0 ? '<div class="empty">Chưa có lịch sử buổi tập.</div>'
+    : '<div class="detail-card">' + logs.slice(0,10).map(function(l) {
+        return '<div class="log-row"><div class="log-date">' + String(l.session_date||'').substring(5,10) + '</div>'
+          + '<div style="flex:1"><div class="log-scores">'
+          + (l.ci_health?'<div class="score-badge">💪 '+l.ci_health+'</div>':'')
+          + (l.ci_mood?'<div class="score-badge">😊 '+l.ci_mood+'</div>':'')
+          + (l.co_quality?'<div class="score-badge">⭐ '+l.co_quality+'</div>':'')
+          + (l.co_completion?'<div class="score-badge">'+l.co_completion+'%</div>':'')
+          + '</div>'
+          + (l.co_student_reaction||l.co_notes?'<div class="log-note">'+(l.co_student_reaction||l.co_notes||'')+'</div>':'')
+          + '</div></div>';
+      }).join('') + '</div>';
+
+  // INFO
+  var infoContent = '<div class="detail-card"><div class="info-grid">'
+    + '<div class="info-item"><div class="info-lbl">Ngày bắt đầu</div><div class="info-val">' + dateStr(s.start_date) + '</div></div>'
+    + '<div class="info-item"><div class="info-lbl">Buổi cuối</div><div class="info-val">' + dateStr(s.last_session_date) + '</div></div>'
+    + '<div class="info-item"><div class="info-lbl">Loại gói</div><div class="info-val">' + String(s.student_type||'-').replace('_',' ') + '</div></div>'
+    + '<div class="info-item"><div class="info-lbl">Gia hạn</div><div class="info-val ' + rc + '">' + (s.renew_probability||'-') + '</div></div>'
+    + '</div>' + (s.note?'<div style="margin-top:10px;padding-top:10px;border-top:.5px solid var(--border);font-size:13px;color:var(--t2);">'+s.note+'</div>':'') + '</div>';
+
+  var panels = {plan:planContent,meal:mealContent,inbody:inbodyContent,photos:photosContent,history:histContent,info:infoContent};
+
+  var panelsHtml = Object.keys(panels).map(function(t) {
+    return '<div class="dtab-panel' + (t===_detailTab?' active':'') + '" id="dpanel-' + t + '">' + panels[t] + '</div>';
+  }).join('');
+
+  document.getElementById('detail-content').innerHTML =
+    '<div class="fade-in">' + hero + stats + tabBar + panelsHtml + '</div>';
+}
+
+
+
+// ── CHECK-IN / CHECK-OUT ──
+var _activeBooking = null;
+var _ratings = { health: 3, mood: 3, energy: 3, quality: 4 };
+var _completion = 100;
+
+function openCheckin(bookingId, studentId, studentName, bookingTime) {
+  _activeBooking = { booking_id: bookingId, student_id: studentId };
+  _ratings = { health: 3, mood: 3, energy: 3, quality: 4 };
+  _completion = 100;
+
+  document.getElementById('modalCheckinTitle').textContent = 'Check-in · Check-out';
+  document.getElementById('modalCheckinSub').textContent = studentName + ' · ' + (bookingTime || '');
+  document.getElementById('ci-notes').value = '';
+  document.getElementById('co-reaction').value = '';
+  document.getElementById('co-notes').value = '';
+
+  // Reset stars
+  ['health','mood','energy'].forEach(function(k) { updateStars(k, 3); });
+  updateStars('quality', 4);
+  updateCompletion(100);
+
+  document.getElementById('modalCheckin').classList.remove('hidden');
+  document.getElementById('btnSubmitSession').disabled = false;
+  document.getElementById('btnSubmitSession').textContent = '✓ Hoàn thành buổi tập';
+}
+
+function closeModal() {
+  document.getElementById('modalCheckin').classList.add('hidden');
+  _activeBooking = null;
+}
+
+function setRating(key, val) {
+  _ratings[key] = val;
+  updateStars(key, val);
+}
+
+function updateStars(key, val) {
+  var container = document.getElementById('stars-' + key);
+  if (!container) return;
+  container.querySelectorAll('.rating-star').forEach(function(s, i) {
+    s.classList.toggle('selected', i + 1 === val);
+  });
+}
+
+function setCompletion(val) {
+  _completion = val;
+  updateCompletion(val);
+}
+
+function updateCompletion(val) {
+  document.querySelectorAll('.comp-btn').forEach(function(b) {
+    b.classList.toggle('selected', parseInt(b.textContent) === val);
+  });
+}
+
+function submitSession() {
+  if (!_activeBooking || !_apiUrl) return;
+  var btn = document.getElementById('btnSubmitSession');
+  btn.disabled = true;
+  btn.textContent = 'Đang lưu...';
+
+  var now = new Date();
+  var pad = function(n) { return String(n).padStart(2,'0'); };
+  var nowStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate())
+    + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+
+  var params = [
+    'action=completeSessionJsonp',
+    'booking_id=' + encodeURIComponent(_activeBooking.booking_id),
+    'student_id=' + encodeURIComponent(_activeBooking.student_id),
+    'ci_health=' + _ratings.health,
+    'ci_mood=' + _ratings.mood,
+    'ci_energy=' + _ratings.energy,
+    'ci_notes=' + encodeURIComponent(document.getElementById('ci-notes').value || ''),
+    'co_quality=' + _ratings.quality,
+    'co_completion=' + _completion,
+    'co_student_reaction=' + encodeURIComponent(document.getElementById('co-reaction').value || ''),
+    'co_notes=' + encodeURIComponent(document.getElementById('co-notes').value || ''),
+    'checkin_time=' + encodeURIComponent(nowStr),
+    'checkout_time=' + encodeURIComponent(nowStr)
+  ].join('&');
+
+  jsonp(_apiUrl + '?' + params, function(err, json) {
+    if (err || !json || !json.success) {
+      btn.disabled = false;
+      btn.textContent = '✓ Hoàn thành buổi tập';
+      alert('Lỗi: ' + (err ? err.message : (json && json.error || 'Không rõ')));
+      return;
+    }
+    closeModal();
+    // Reload dashboard & booking
+    if (json.data && json.data.dashboard) {
+      _dashData = json.data.dashboard;
+      renderDashboard(json.data.dashboard);
+    }
+    loadBookingWeek(_currentWeekStart);
+    alert('✅ Đã hoàn thành buổi tập!');
+  });
+}
+
+// ── BOOKING ──
+var _currentWeekStart = null;
+
+function getMondayOfWeek(dateStr) {
+  var d = dateStr ? new Date(dateStr) : new Date();
+  var day = d.getDay();
+  var diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  var pad = function(n) { return String(n).padStart(2,'0'); };
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+}
+
+function addDays(dateStr, n) {
+  var d = new Date(dateStr);
+  d.setDate(d.getDate() + n);
+  var pad = function(x) { return String(x).padStart(2,'0'); };
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+}
+
+function formatDate(dateStr) {
+  var d = new Date(dateStr);
+  return d.toLocaleDateString('vi-VN', {day:'numeric', month:'numeric'});
+}
+
+function isToday(dateStr) {
+  return dateStr === getMondayOfWeek(new Date().toISOString().substring(0,10)).substring(0,10) ||
+    dateStr === new Date().toISOString().substring(0,10);
+}
+
+function loadBookingWeek(weekStart) {
+  if (!_apiUrl) { loadAll(); return; }
+  if (!weekStart) weekStart = _currentWeekStart || getMondayOfWeek();
+  _currentWeekStart = weekStart;
+
+  document.getElementById('booking-content').innerHTML =
+    '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải lịch tuần...</div></div>';
+
+  jsonp(_apiUrl + '?action=getBookingsByWeekJsonp&week_start=' + weekStart, function(err, json) {
+    if (err || !json || !json.success) {
+      document.getElementById('booking-content').innerHTML =
+        '<div class="error-box">Không tải được lịch.<br>' + (err ? err.message : (json && json.error || '')) + '</div>';
+      return;
+    }
+    renderBookingWeek(json.data);
+  });
+}
+
+function prevWeek() { loadBookingWeek(addDays(_currentWeekStart, -7)); }
+function nextWeek() { loadBookingWeek(addDays(_currentWeekStart, 7)); }
+
+function renderBookingWeek(d) {
+  var bookings = d.bookings || [];
+  var byDay = d.by_day || {};
+  var weekStart = d.week_start || _currentWeekStart;
+  var weekEnd = d.week_end || addDays(weekStart, 6);
+  var total = d.total || bookings.length;
+  var todayStr = new Date().toISOString().substring(0,10);
+
+  // Week nav
+  var startFmt = new Date(weekStart).toLocaleDateString('vi-VN', {day:'numeric',month:'numeric'});
+  var endFmt = new Date(weekEnd).toLocaleDateString('vi-VN', {day:'numeric',month:'numeric',year:'numeric'});
+
+  var navHtml = '<div class="week-nav">'
+    + '<div class="week-btn" onclick="prevWeek()">‹</div>'
+    + '<div><div class="week-title">' + startFmt + ' — ' + endFmt + '</div>'
+    + '<div class="week-sub">Tuần ' + (isCurrentWeek(weekStart, todayStr) ? 'này' : '') + '</div></div>'
+    + '<div class="week-btn" onclick="nextWeek()">›</div>'
+    + '</div>';
+
+  // Summary
+  var completed = bookings.filter(function(b) { return b.status === 'completed'; }).length;
+  var upcoming = bookings.filter(function(b) { return b.status === 'upcoming' || b.status === 'scheduled'; }).length;
+  var summaryHtml = '<div class="week-summary">'
+    + '<div class="wsum-card"><div class="wsum-num">' + total + '</div><div class="wsum-lbl">Tổng buổi</div></div>'
+    + '<div class="wsum-card"><div class="wsum-num">' + completed + '</div><div class="wsum-lbl">Hoàn thành</div></div>'
+    + '<div class="wsum-card"><div class="wsum-num">' + upcoming + '</div><div class="wsum-lbl">Sắp tới</div></div>'
+    + '</div>';
+
+  // Days
+  var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var dayViShort = {Mon:'Thứ 2',Tue:'Thứ 3',Wed:'Thứ 4',Thu:'Thứ 5',Fri:'Thứ 6',Sat:'Thứ 7',Sun:'CN'};
+
+  var daysHtml = days.map(function(day, i) {
+    var dateOfDay = addDays(weekStart, i);
+    var bks = byDay[dateOfDay] || [];
+    var isT = dateOfDay === todayStr;
+
+    var bkHtml = bks.length === 0
+      ? '<div class="no-booking-day">Không có lịch</div>'
+      : bks.map(function(b) {
+          var st = (b.status || 'upcoming').toLowerCase().replace(/\s/g,'_');
+          var clickable = (b.status === 'upcoming' || b.status === 'scheduled');
+          var cardClass = 'bk-card' + (clickable ? ' bk-card-clickable' : '');
+          var onclick = clickable
+            ? ' onclick="openCheckin(\''+b.booking_id+'\',\''+b.student_id+'\',\''+b.student_name+'\',\''+b.time+'\')"'
+            : '';
+          return '<div class="' + cardClass + '"' + onclick + '>'
+            + '<div class="bk-card-time">' + (b.time || '--') + '</div>'
+            + '<div class="bk-card-div"></div>'
+            + '<div class="bk-card-info">'
+            + '<div class="bk-card-name">' + (b.student_name||'?') + '</div>'
+            + '<div class="bk-card-meta">' + (b.session_type||'PT') + ' · ' + (b.duration_minutes||60) + ' phút</div>'
+            + '</div>'
+            + (clickable
+                ? '<div style="font-size:11px;color:var(--cocoa);font-weight:500;">Bấm check-in →</div>'
+                : '<div class="pill pill-' + st + '">' + b.status + '</div>')
+            + '</div>';
+        }).join('');
+
+    return '<div class="day-block">'
+      + '<div class="day-header' + (isT?' day-today':'') + '">'
+      + (isT ? '<div class="day-dot"></div>' : '')
+      + '<div class="day-name">' + dayViShort[day] + '</div>'
+      + '<div class="day-date">' + formatDate(dateOfDay) + '</div>'
+      + '</div>'
+      + bkHtml + '</div>';
+  }).join('');
+
+  document.getElementById('booking-content').innerHTML =
+    '<div class="fade-in">' + navHtml + summaryHtml + daysHtml
+    + '<div class="footer">Lyft Zone Coach OS · v1.0</div></div>';
+}
+
+function isCurrentWeek(weekStart, todayStr) {
+  var monday = getMondayOfWeek(todayStr);
+  return weekStart === monday;
+}
+
+// ── AUTO LOAD ──
 window.addEventListener('load', function() {
+  var DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbwsAX0oN5ZReyPRdLg4tp_MhY40xojFMQ6RyxpM9B0y8a0EGPDKJ_7H6vDJ3VRRv50PSg/exec';
   try {
-    var saved = localStorage.getItem('lz_api_url');
-    if (saved) document.getElementById('apiUrl').value = saved;
-  } catch(e) {}
+    var saved = localStorage.getItem('lz_url') || DEFAULT_URL;
+    document.getElementById('apiUrl').value = saved;
+  } catch(e) {
+    document.getElementById('apiUrl').value = DEFAULT_URL;
+  }
+  // Auto load ngay khi mở app
+  loadAll();
 });
 </script>
+
+<!-- CHECK-IN MODAL -->
+<div class="modal-overlay hidden" id="modalCheckin">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalCheckinTitle">Check-in đầu buổi</div>
+    <div class="modal-sub" id="modalCheckinSub"></div>
+
+    <div class="rating-group">
+      <div class="rating-label">💪 Sức khoẻ hôm nay</div>
+      <div class="rating-stars" id="stars-health">
+        <div class="rating-star" onclick="setRating('health',1)"><span>1</span></div>
+        <div class="rating-star" onclick="setRating('health',2)"><span>2</span></div>
+        <div class="rating-star selected" onclick="setRating('health',3)"><span>3</span></div>
+        <div class="rating-star" onclick="setRating('health',4)"><span>4</span></div>
+        <div class="rating-star" onclick="setRating('health',5)"><span>5</span></div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <div class="rating-label">😊 Tâm trạng</div>
+      <div class="rating-stars" id="stars-mood">
+        <div class="rating-star" onclick="setRating('mood',1)"><span>1</span></div>
+        <div class="rating-star" onclick="setRating('mood',2)"><span>2</span></div>
+        <div class="rating-star selected" onclick="setRating('mood',3)"><span>3</span></div>
+        <div class="rating-star" onclick="setRating('mood',4)"><span>4</span></div>
+        <div class="rating-star" onclick="setRating('mood',5)"><span>5</span></div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <div class="rating-label">⚡ Năng lượng</div>
+      <div class="rating-stars" id="stars-energy">
+        <div class="rating-star" onclick="setRating('energy',1)"><span>1</span></div>
+        <div class="rating-star" onclick="setRating('energy',2)"><span>2</span></div>
+        <div class="rating-star selected" onclick="setRating('energy',3)"><span>3</span></div>
+        <div class="rating-star" onclick="setRating('energy',4)"><span>4</span></div>
+        <div class="rating-star" onclick="setRating('energy',5)"><span>5</span></div>
+      </div>
+    </div>
+    <textarea class="modal-input" id="ci-notes" rows="2" placeholder="Ghi chú trước buổi tập (tuỳ chọn)..."></textarea>
+
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--warm-black);">Check-out cuối buổi</div>
+    <div class="rating-group">
+      <div class="rating-label">⭐ Chất lượng buổi tập</div>
+      <div class="rating-stars" id="stars-quality">
+        <div class="rating-star" onclick="setRating('quality',1)"><span>1</span></div>
+        <div class="rating-star" onclick="setRating('quality',2)"><span>2</span></div>
+        <div class="rating-star" onclick="setRating('quality',3)"><span>3</span></div>
+        <div class="rating-star selected" onclick="setRating('quality',4)"><span>4</span></div>
+        <div class="rating-star" onclick="setRating('quality',5)"><span>5</span></div>
+      </div>
+    </div>
+    <div class="rating-group">
+      <div class="rating-label">✅ Mức độ hoàn thành giáo án</div>
+      <div class="completion-group" id="comp-group">
+        <div class="comp-btn" onclick="setCompletion(25)">25%</div>
+        <div class="comp-btn" onclick="setCompletion(50)">50%</div>
+        <div class="comp-btn" onclick="setCompletion(75)">75%</div>
+        <div class="comp-btn selected" onclick="setCompletion(100)">100%</div>
+      </div>
+    </div>
+    <textarea class="modal-input" id="co-reaction" rows="2" placeholder="Phản ứng học viên sau buổi tập..."></textarea>
+    <textarea class="modal-input" id="co-notes" rows="2" placeholder="Ghi chú HLV sau buổi (tuỳ chọn)..."></textarea>
+
+    <button class="btn-submit" id="btnSubmitSession" onclick="submitSession()">✓ Hoàn thành buổi tập</button>
+    <button class="btn-cancel" onclick="closeModal()">Huỷ</button>
+  </div>
+</div>
+
 </body>
 </html>
