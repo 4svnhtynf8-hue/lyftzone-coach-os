@@ -357,9 +357,11 @@ function loadAll() {
   // Hiện data cũ từ localStorage NGAY LẬP TỨC
   try {
     var cached = localStorage.getItem('lz_cache_all');
+    dbg(cached ? 'found cache len=' + cached.length : 'NO cache');
     if (cached) {
       var c = JSON.parse(cached);
-      if (c.dashboard) { _dashData = c.dashboard; renderDashboard(c.dashboard); dbg('cache hit! rendered from localStorage'); }
+      dbg('parsed ok, has dashboard=' + !!c.dashboard);
+      if (c.dashboard) { _dashData = c.dashboard; renderDashboard(c.dashboard); dbg('CACHE HIT! rendered instantly'); }
       if (c.students)  { _stuData  = c.students;  renderStudents(c.students);  }
     } else {
       dbg('no localStorage cache, fetching...');
