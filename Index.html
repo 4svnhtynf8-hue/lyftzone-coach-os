@@ -319,37 +319,35 @@ function loadAll() {
   if (!_apiUrl) return;
   try { localStorage.setItem('lz_url', _apiUrl); } catch(e) {}
 
-  // Hiện data cũ từ cache NGAY LẬP TỨC — không chờ API
-  var shown = false;
-  try {
-    var cd = localStorage.getItem('lz_cache_dash');
-    var cs = localStorage.getItem('lz_cache_stu');
-    if (cd) { _dashData = JSON.parse(cd); renderDashboard(_dashData); shown = true; }
-    if (cs) { _stuData  = JSON.parse(cs);  renderStudents(_stuData);  }
-  } catch(e) {}
-
-  // Nếu chưa có cache → show spinner
-  if (!shown) {
-    document.getElementById('dash-content').innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
-    document.getElementById('stu-content').innerHTML  = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
-  }
-
-  // Gọi API ngầm để cập nhật data mới
   _currentWeekStart = getMondayOfWeek();
 
-  jsonp(_apiUrl + '?action=getDashboardJsonp', function(err, json) {
-    if (!err && json && json.success) {
-      _dashData = json.data;
-      renderDashboard(json.data);
-      try { localStorage.setItem('lz_cache_dash', JSON.stringify(json.data)); } catch(e) {}
+  // Hiện data cũ từ localStorage NGAY LẬP TỨC
+  try {
+    var cached = localStorage.getItem('lz_cache_all');
+    if (cached) {
+      var c = JSON.parse(cached);
+      if (c.dashboard) { _dashData = c.dashboard; renderDashboard(c.dashboard); }
+      if (c.students)  { _stuData  = c.students;  renderStudents(c.students);  }
+    } else {
+      document.getElementById('dash-content').innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
+      document.getElementById('stu-content').innerHTML  = '<div class="loading"><div class="spinner"></div><div class="loading-txt">Đang tải...</div></div>';
     }
-  });
+  } catch(e) {}
 
-  jsonp(_apiUrl + '?action=getStudentsJsonp', function(err, json) {
+  // 1 API call duy nhất — đọc từ Cache tab trong Sheet
+  jsonp(_apiUrl + '?action=getCacheJsonp', function(err, json) {
     if (!err && json && json.success) {
-      _stuData = json.data;
-      renderStudents(json.data);
-      try { localStorage.setItem('lz_cache_stu', JSON.stringify(json.data)); } catch(e) {}
+      if (json.dashboard) { _dashData = json.dashboard; renderDashboard(json.dashboard); }
+      if (json.students)  { _stuData  = json.students;  renderStudents(json.students);  }
+      try { localStorage.setItem('lz_cache_all', JSON.stringify(json)); } catch(e) {}
+    } else {
+      // Fallback: gọi riêng lẻ nếu cache lỗi
+      jsonp(_apiUrl + '?action=getDashboardJsonp', function(e2, j2) {
+        if (!e2 && j2 && j2.success) { _dashData = j2.data; renderDashboard(j2.data); }
+      });
+      jsonp(_apiUrl + '?action=getStudentsJsonp', function(e3, j3) {
+        if (!e3 && j3 && j3.success) { _stuData = j3.data; renderStudents(j3.data); }
+      });
     }
   });
 }
