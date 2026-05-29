@@ -269,7 +269,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--antique);color:var(--warm
       <div class="nav-icon">◎</div>
       <div class="nav-label">Học viên</div>
     </div>
-    <div class="nav-item" id="nav-booking" onclick="showScreen('booking',this);loadBookingWeek()">
+    <div class="nav-item" id="nav-booking" onclick="showScreen('booking',this);initBooking()">
       <div class="nav-icon">📅</div>
       <div class="nav-label">Lịch</div>
     </div>
@@ -299,6 +299,9 @@ function showScreen(name, el) {
   document.getElementById('screen-' + name).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
   el.classList.add('active');
+  // Re-render từ memory nếu có — không gọi API
+  if (name === 'students' && _stuData) renderStudents(_stuData);
+  if (name === 'dashboard' && _dashData) renderDashboard(_dashData);
 }
 
 // ── JSONP ──
@@ -808,6 +811,17 @@ function submitSession() {
 
 // ── BOOKING ──
 var _currentWeekStart = null;
+var _bookingCache = {};
+
+function initBooking() {
+  if (!_currentWeekStart) _currentWeekStart = getMondayOfWeek();
+  // Nếu đã có data trong memory → hiện ngay, không gọi API
+  if (_bookingCache[_currentWeekStart]) {
+    renderBookingWeek(_bookingCache[_currentWeekStart]);
+    return;
+  }
+  loadBookingWeek(_currentWeekStart);
+}
 
 function getMondayOfWeek(dateStr) {
   var d = dateStr ? new Date(dateStr) : new Date();
@@ -849,6 +863,7 @@ function loadBookingWeek(weekStart) {
         '<div class="error-box">Không tải được lịch.<br>' + (err ? err.message : (json && json.error || '')) + '</div>';
       return;
     }
+    _bookingCache[weekStart] = json.data;
     renderBookingWeek(json.data);
   });
 }
